@@ -2,6 +2,10 @@ from flask import Flask,url_for,render_template  # 引入Flask类 ,url_for反向
 from faker import Factory   # 使用faker生成测试数据
 app = Flask(__name__)     # 实例化
 
+# ****************** 设置不用重启更新文件
+app.jinja_env.auto_reload = True
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+
 # ******************  项目测试数据 ****************************
 # 使用faker生成
 fake = Factory.create()
