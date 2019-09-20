@@ -9,7 +9,7 @@ fake = Factory.create()
 #fake = Factory.create('zh_CN')   本地化
 name = "guof"
 movies = []
-for i in range(20):
+for i in range(10):
     item = {}
     item["title"] = fake.name()
     item["year"] = fake.year()

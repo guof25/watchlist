@@ -4,17 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
     <title>{{ name }}</title>
 </head>
 <body>
-    <h2> {{ name }}'s watchlist </h2>
+    <h2>
+    <img class="avatar" src="{{ url_for('static',filename='images/avatar.png') }}" alt="avatar">
+    {{ name }}'s watchlist </h2>
     {# 使用过滤器得到传入的数据集长度 #}
     <p>  {{ movies|length }} title </p>
-    <ul>
+    <ul class="movie-list">
         {% for movie  in  movies %}
         <li> {{ movie.title }} - {{ movie.year }} </li>
         {% endfor %}
     </ul>
+    <img class="totoro" src="{{ url_for('static',filename='images/totoro.gif') }}" alt="totoro">
     <footer>
         <small>&copy;2019 <a href="http://helloflask.com/tutorial"> helloflask </a> </small>
     </footer>
