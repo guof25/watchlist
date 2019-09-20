@@ -2,12 +2,11 @@ from flask import Flask,url_for,render_template  # 引入Flask类 ,url_for反向
 from faker import Factory   # 使用faker生成测试数据
 app = Flask(__name__)     # 实例化
 
-
 # ******************  项目测试数据 ****************************
 # 使用faker生成
 fake = Factory.create()
 #fake = Factory.create('zh_CN')   本地化
-name = "guof"
+name = "author name"
 movies = []
 for i in range(10):
     item = {}
@@ -45,6 +44,10 @@ def test_url_for():
     print(url_for("user",name="guof"))  # 带参数URL
     return "ok"
 
+
+@app.template_filter("my_filter")
+def gf(value):
+    return value.replace('name','guof')
 
 # *************************  flask程序启动 *********************************
 '''
