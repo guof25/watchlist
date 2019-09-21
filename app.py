@@ -4,9 +4,9 @@ from settings import DebugMode,TestingMode  # 设置模式
 from flask_sqlalchemy import SQLAlchemy  #  数据库扩展
 import os
 import sys
+import click
 
 app = Flask(__name__)     # 实例化
-
 
 #***************  数据库扩展********************
 # sqlite
@@ -37,21 +37,12 @@ class Movie(db.Model):
     title = db.Column(db.String(20))
     year = db.Column(db.String(4))
 
-# *************************   项目测试数据 *******************************
-# 使用faker生成
+# *************************   项目测试数据 ******************************
 fake = Factory.create()
 #fake = Factory.create('zh_CN')   本地化
 
-# 程序变量方式
-name = "author name"
-movies = []
-for i in range(10):
-    item = {}
-    item["title"] = fake.name()
-    item["year"] = fake.year()
-    movies.append(item)
-
-# 生成数据库数据
+# 使用click方式生成数据库数据
+@app.cli.command()
 def gen_db_data():
     users = []
     movies = []
@@ -68,6 +59,7 @@ def gen_db_data():
     db.session.bulk_insert_mappings(User,users) # 批量插入数据
     db.session.bulk_insert_mappings(Movie,movies)
     db.session.commit()
+    click.echo("data generate successfully!")
 
 # ******************　路由与响应函数 *******************************
 # 主页
@@ -94,7 +86,6 @@ def test_url_for():
 @app.template_filter("my_filter")
 def gf(value):
     return value.replace('name','guof')
-
 
 # *************************  flask程序启动 *********************************
 '''
