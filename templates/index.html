@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
     <link rel="icon" href="{{ url_for('static',filename='images/catchat.ico') }}">
-    <title>{{ name }}</title>
+    <title>{{ user.name }}</title>
 </head>
 <body>
     <h2>
     <img class="avatar" src="{{ url_for('static',filename='images/avatar.png') }}" alt="avatar">
-    {{ name | my_filter }}'s watchlist </h2>
+    {{ user.name }}'s watchlist </h2>
     {# 使用过滤器得到传入的数据集长度 #}
     <p>  {{ movies|length }} title </p>
     <ul class="movie-list">
