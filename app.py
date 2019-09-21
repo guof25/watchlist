@@ -44,6 +44,8 @@ fake = Factory.create()
 # 使用click方式生成数据库数据
 @app.cli.command()
 def gen_db_data():
+    db.drop_all()
+    db.create_all()
     users = []
     movies = []
     for i in range(10):
@@ -55,7 +57,6 @@ def gen_db_data():
         item = {}
         item["name"]=fake.name()
         users.append(item)
-
     db.session.bulk_insert_mappings(User,users) # 批量插入数据
     db.session.bulk_insert_mappings(Movie,movies)
     db.session.commit()
