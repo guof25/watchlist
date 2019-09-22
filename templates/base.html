@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% block head %}
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+        <link rel="icon" href="{{ url_for('static',filename='images/catchat.ico') }}">
+        <title>{{ user.name }}</title>
+    {% endblock head %}
+</head>
+<body>
+    <h2>
+    <img class="avatar" src="{{ url_for('static',filename='images/avatar.png') }}" alt="avatar">
+    {{ user.name }}'s watchlist </h2>
+    <nav>
+        <ul>
+            <li>
+                <a href="{{ url_for('index') }}">home</a>
+            </li>
+        </ul>
+    </nav>
+    {% block content %}
+    {% endblock content %}
+    <footer>
+        <small>&copy;2019 <a href="http://helloflask.com/tutorial"> helloflask </a> </small>
+    </footer>
+</body>
+</html>
