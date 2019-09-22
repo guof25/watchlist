@@ -1,4 +1,4 @@
-from flask import Flask,url_for,render_template  # 引入Flask类 ,url_for反向解析 
+from flask import Flask,url_for,render_template,request,flash,redirect # 引入Flask类 ,url_for反向解析 
 from faker import Factory   # 使用faker生成测试数据
 from settings import DebugMode,TestingMode  # 设置模式
 from flask_sqlalchemy import SQLAlchemy  #  数据库扩展
@@ -87,11 +87,57 @@ def gf(value):
 
 # ******************　路由与响应函数 *******************************
 # 主页
-@app.route("/")     #路由注册 
+@app.route("/",methods=['GET','POST'])     #路由注册,未指定methods则默认是只接受get方法
 def index():
-    user = User.query.first()
-    movies = Movie.query.all()
-    return render_template("index_extend.html",movies=movies)
+    # request只有在请求触发时才会包含数据,所以你只能在视图函数内部调用它
+    if request.method == "POST":            #根据request.method来判断是GET/POST
+        title = request.form.get("title")   
+        year = request.form.get("year")
+        if not all([title,year]):
+            #flash() 函数用来在视图函数里向模板传递提示消息，消息存储在session中
+            #get_flashed_messages() 函数则用来在模板中获取提示消息
+            flash("title and year are required.")     
+            return redirect(url_for('index'))
+        elif len(year)!=4 or len(title)>60:
+            flash("info format is invalid")
+            return redirect(url_for('index'))
+        
+        movie = Movie(title=title,year=year)
+        db.session.add(movie)
+        db.session.commit()
+        flash("item created.")
+        return redirect(url_for('index'))
+    else:
+        user = User.query.first()
+        movies = Movie.query.all()
+        return render_template("index_extend.html",movies=movies)
+
+# 删除记录
+@app.route("/del/<int:id>",methods=['POST'])    
+def delMovie(id):
+    movie = Movie.query.get_or_404(id)
+    db.session.delete(movie)
+    db.session.commit()
+    flash("item deleted!")
+    return redirect(url_for('index'))
+
+# 更新记录
+@app.route('/edit/<int:movie_id>', methods=['GET', 'POST'])
+def edit(movie_id):
+    movie = Movie.query.get_or_404(movie_id)
+    if request.method == 'POST': # 处理编辑表单的提交请求
+        title = request.form['title']
+        year = request.form['year']
+        if not title or not year or len(year) != 4 or len(title) > 60:
+            flash('Invalid input.')
+            return redirect(url_for('edit', movie_id=movie.id)) # 重定向回对应的编辑页面
+        movie.title = title  
+        movie.year = year  
+        db.session.commit()  
+        flash('Item updated.')
+        return redirect(url_for('index'))  
+    else:
+        return render_template('edit_extend.html', movie=movie)  
 
 # *************************  flask程序启动 *********************************
 '''
