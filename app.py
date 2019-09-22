@@ -6,10 +6,12 @@ import os
 import sys
 import click
 
-app = Flask(__name__)     # 实例化
+
+# ****************  flask实例化 *******************
+app = Flask(__name__)  
 
 #***************  数据库扩展********************
-# sqlite
+# sqlite,文件型数据库
 WIN = sys.platform.startswith("win")
 if WIN:
     prefix = "sqlite:///"
@@ -18,7 +20,7 @@ else:
 app.config["SQLALCHEMY_DATABASE_URI"] = prefix + os.path.join(app.root_path,"data.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
 
-db = SQLAlchemy(app)   
+db = SQLAlchemy(app)    #初始化db对象
 
 # ********************** 开发模式设置 *************************
 app.config.from_object(DebugMode)    #开启DEBUG模式，直接在前端页面显示错误代码
@@ -26,9 +28,9 @@ app.config.from_object(DebugMode)    #开启DEBUG模式，直接在前端页面�
 
 
 # ************************ 定义模型类 ****************************************class User(db.Model):  
-class User(db.Model):
-    __tablename__ = "wl_user"
-    id = db.Column(db.Integer,primary_key=True)
+class User(db.Model):                      #继承自db.Model
+    __tablename__ = "wl_user"              # 数据库表名，未定义则默认是类名
+    id = db.Column(db.Integer,primary_key=True)   # flask中主键必须显示定义，自增长类型
     name = db.Column(db.String(20))
 
 class Movie(db.Model):
@@ -38,11 +40,11 @@ class Movie(db.Model):
     year = db.Column(db.String(4))
 
 # *************************   项目测试数据 ******************************
-fake = Factory.create()
+fake = Factory.create()     # 通过fake扩展模块来生成测试数据
 #fake = Factory.create('zh_CN')   本地化
 
 # 使用click方式生成数据库数据
-@app.cli.command()
+@app.cli.command()     #命令注册
 def gen_db_data():
     db.drop_all()
     db.create_all()
@@ -62,31 +64,34 @@ def gen_db_data():
     db.session.commit()
     click.echo("data generate successfully!")
 
-# ******************　路由与响应函数 *******************************
-# 主页
-@app.route("/") 
-def index():
-    #return "<h1>welcome to my watchlist!</h1><img src='http://helloflask.com/totoro.gif'>"
+
+# **************** 模板全局变量注册 ******************************
+@app.context_processor      #所有模板都可获取的变量
+def inject_user():
     user = User.query.first()
-    movies = Movie.query.all()
-    return render_template("index.html",user=user,movies=movies)
+    return dict(user=user)
 
-# 带变量的URL规则
-@app.route("/user/<name>")
-def user(name):  #变量作参数传入响应函数
-    return  "user name : %s" % name
+# ******************* 错误响应 **********************************
+# 404 错误
+@app.errorhandler(404)      # app.errorhandler中注册错误代码
+def page_not_found(e):      # 接受异常信息作为参数
+    user = User.query.first()
+    return render_template("404_extend.html"),404      # 返回状态码作为第二个参数 ，普通响应函数默认是200，所以不用写
 
-# url_for方法可以通过响应函数名称来反向得到URL地址
-@app.route("/url_for")
-def test_url_for():
-    print(url_for("hello"))     # 不带参数URL
-    print(url_for("user",name="guof"))  # 带参数URL
-    return "ok"
-
-# 模板过滤器
-@app.template_filter("my_filter")
+# ******************* 模板过滤器 ************************************
+#自定义模板过滤器
+@app.template_filter("my_filter")    # 过滤器名称注册
 def gf(value):
     return value.replace('name','guof')
+
+
+# ******************　路由与响应函数 *******************************
+# 主页
+@app.route("/")     #路由注册 
+def index():
+    user = User.query.first()
+    movies = Movie.query.all()
+    return render_template("index_extend.html",movies=movies)
 
 # *************************  flask程序启动 *********************************
 '''
