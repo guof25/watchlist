@@ -87,7 +87,7 @@ def gen_db_data():
     db.session.bulk_insert_mappings(User,users) # 批量插入数据
     db.session.bulk_insert_mappings(Movie,movies)
     db.session.commit()
-    click.echo("data generate successfully!")
+    click.echo("data generated!")
 
 # *************** 生成管理员账户 *******************************
 @app.cli.command()
@@ -214,7 +214,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash("Goodby..")
+    flash("Goodbye.")
     return redirect(url_for('index')) # 重定向到主页
 
 
