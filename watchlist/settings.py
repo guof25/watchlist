@@ -6,7 +6,6 @@ import os
 class DebugMode(object):
     DEBUG = True
     ENV="development"
-    SECRET_KEY = 'dev'
     DIALECT = 'mysql'
     DRIVER = 'pymysql'
     USERNAME = 'root'
@@ -24,7 +23,6 @@ class DebugMode(object):
 class TestingMode(object):
     TESTING = True
     ENV = "production"
-    SECRET_KEY = 'test'
     DIALECT = 'mysql'
     DRIVER = 'pymysql'
     USERNAME = 'root'
