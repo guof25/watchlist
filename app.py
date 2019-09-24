@@ -1,3 +1,6 @@
+from watchlist import app
+
+'''
 from flask import Flask,url_for,render_template,request,flash,redirect # 引入Flask类 ,url_for反向解析 
 from faker import Factory   # 使用faker生成测试数据
 from settings import DebugMode,TestingMode  # 设置模式
@@ -30,14 +33,6 @@ app.config.from_object(DebugMode)    #开启DEBUG模式，直接在前端页面�
 
 
 # ***********************用户认证　××××××××××××××××××××××××××××××××××
-'''
- Flask-Login 提供了一个 current_user 变量， 注册这个函数的目的是如查用户已登录， 
- current_user 变量的值会是当前用户的用户模型类记录。
-
-另一个步骤是让存储用户的 User 模型类继承 Flask-Login 提供的 UserMixin 类
-会让 User 类拥有几个用于判断认证状态的属性和方法
-is_authenticated
-'''
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -233,12 +228,8 @@ def settings():
         return redirect(url_for('index'))
     else:
         return render_template('settings.html')
-
+'''
 
 # *************************  flask程序启动 *********************************
-'''
-# 1 实例启动  app.run()
-# 2 命令行启动  flask run  启用flask发现机制,默认启动程序在app.py或wsgi.py中,可通过环境变量FLASK_APP来更该改启动程序
-'''
 if __name__ == "__main__":
     app.run()

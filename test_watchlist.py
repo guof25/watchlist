@@ -1,5 +1,7 @@
 import unittest
-from app import app,db,Movie,User,gen_db_data
+from watchlist import app,db
+from watchlist.models import Movie,User
+from watchlist.comands import gen_db_data
 
 '''
 web测试中， 通过判断响应主体中是否包含预期的内容来测试程序是否正常工作
