@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>  {{ movies|length }} title </p>
+{% if current_user.is_authenticated %}
+<form method="post">
+    Name <input type="text" name="title" autocomplete="off" required>
+    Year <input type="text" name="year" autocomplete="off" required>
+    <input class="btn" type="submit" name="submit" value="Add">
+</form>
+{% endif %}
+
+<ul class="movie-list">
+    {% for movie  in  movies %}
+    <li> {{ loop.index }} - {{ movie.title }} - {{ movie.year }} 
+        <span class="float-right">
+            <a class="imdb" href="https://www.imdb.com/find?q={{ movie.title }}" target="_blank" title="Find this movie on IMDb">IMDb</a>
+            <a class="btn" href="{{ url_for('edit',movie_id=movie.id) }}">update</a>
+            <!--<a class="imdb" href="{{ url_for("delMovie",id=movie.id) }}">del</a>  get方式 链接不安全，采用POST方式-->
+            <span class="float-right">
+                <form  class="inline-form"  action="{{ url_for("delMovie",id=movie.id) }}">
+                    <input type="submit" name="delete" class="btn" value="delete" onclick="return confirm('are your sure')">
+                </form>
+            </span>
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+<img class="totoro" src="{{ url_for('static',filename='images/totoro.gif') }}" alt="totoro">
+{% endblock content %}

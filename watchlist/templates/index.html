@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static',filename='images/catchat.ico') }}">
+    <title>{{ user.name }}</title>
+</head>
+<body>
+    <h2>
+    <img class="avatar" src="{{ url_for('static',filename='images/avatar.png') }}" alt="avatar">
+    {{ user.name }}'s watchlist </h2>
+    {# 使用过滤器得到传入的数据集长度 #}
+    <p>  {{ movies|length }} title </p>
+    <ul class="movie-list">
+        {% for movie  in  movies %}
+        <li> {{ loop.index }} - {{ movie.title }} - {{ movie.year }} </li>
+        {% endfor %}
+    </ul>
+    <img class="totoro" src="{{ url_for('static',filename='images/totoro.gif') }}" alt="totoro">
+    <footer>
+        <small>&copy;2019 <a href="http://helloflask.com/tutorial"> helloflask </a> </small>
+    </footer>
+</body>
+</html>
