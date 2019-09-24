@@ -7,6 +7,8 @@ from flask_login import LoginManager
 from watchlist.settings import DebugMode,TestingMode  # 设置模式
 
 app = Flask(__name__)
+#像密钥这种敏感信息， 保存到环境变量中要比直接写在代码中更加安全。
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev')
 
 #**********************  SQLAlchemy扩展　*****************************
 # sqlite,文件型数据库
@@ -16,7 +18,7 @@ if WIN:
 else:
     prefix = "sqlite:////"
 #定位到项目目录下，不在包目录下
-app.config["SQLALCHEMY_DATABASE_URI"] = prefix + os.path.join(os.path.dirname(app.root_path),"data.db")
+app.config["SQLALCHEMY_DATABASE_URI"] = prefix + os.path.join(os.path.dirname(app.root_path),os.getenv('DATABASE_FILE', 'data.db'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
  #初始化db对象
 db = SQLAlchemy(app)   
